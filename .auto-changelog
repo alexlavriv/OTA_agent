@@ -1,0 +1,6 @@
+{
+  "commitUrl": "https://gitlab.com/phantom-auto/sdk/sdk-coreagent/-/commit/{id}",
+  "issueUrl": "https://gitlab.com/phantom-auto/sdk/sdk-coreagent/-/issues/{id}",
+  "mergeUrl": "https://gitlab.com/phantom-auto/sdk/sdk-coreagent/-/merge_requests/{id}",
+  "compareUrl": "https://gitlab.com/phantom-auto/sdk/sdk-coreagent/-/compare/{from}...{to}"
+}

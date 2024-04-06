@@ -1,0 +1,38 @@
+image: docker:stable
+variables:
+    DOCKER_DRIVER: overlay2
+    CI_REGISTRY_USER: "$CI_User_id"
+    CI_REGISTRY_PASSWORD: "$CI_User_Password"
+    AMD64_TAG: amd64-$CI_TAG-$CI_COMMIT_REF_NAME
+    ARM64_TAG: arm64-$CI_TAG-$CI_COMMIT_REF_NAME
+    ARM64_FULL_TAG: phau/coreagent:arm64-$CI_TAG-$CI_COMMIT_REF_NAME
+    AMD64_FULL_TAG: phau/coreagent:amd64-$CI_TAG-$CI_COMMIT_REF_NAME
+
+stages:
+    - Build
+    - Tests
+    - Manifest
+    - BuildSnap
+    - Backoffice
+
+include:
+  #Slack Notification
+  - project: 'phantom-auto/phantom-depot'
+    ref: 1.3.77
+    file: 'ci-depot/general_workflow/slack-notification.yml'
+  #Build core agent
+  - project: 'phantom-auto/phantom-depot'
+    ref: 1.3.77
+    file: 'ci-depot/core-agent/.gitlab-ci.yml'
+  #Run Agent tests
+  - project: 'phantom-auto/phantom-depot'
+    ref: 1.3.77
+    file: 'ci-depot/core-agent/tests.gitlab-ci.yml'
+  #Build core agent SNAP
+  - project: 'phantom-auto/phantom-depot'
+    ref: 1.3.77
+    file: 'ci-depot/core-agent/snap.gitlab-ci.yml'
+  #Backoffice
+  - project: 'phantom-auto/phantom-depot'
+    ref: 1.3.77
+    file: 'ci-depot/core-agent/backoffice.gitlab-ci.yml'

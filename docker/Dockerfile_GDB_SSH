@@ -1,0 +1,45 @@
+ARG TAG=local-dev
+FROM phau/coreagent:$TAG
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN mkdir /tmp || true
+RUN chmod 1777 /tmp
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    bsdmainutils \
+    gdb \
+    gdbserver \
+    htop \
+    ifmetric \
+    libc6-dbg \
+    lsof \
+    openssh-server \
+    rsync \
+    strace \
+    traceroute \
+    valgrind \
+    vim \
+    dnsutils
+
+
+# configure SSH for communication with remote IDE
+# source: https://github.com/rastasheep/ubuntu-sshd
+RUN mkdir /var/run/sshd >/dev/null 2>&1 || true
+RUN echo 'root:root' | chpasswd
+RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+#RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN sed -ri 's/^#?Port 22/Port 5454/g' /etc/ssh/sshd_config
+RUN sed -ri 's/^#?PasswordAuthentication\s+.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+RUN mkdir /root/.ssh >/dev/null 2>&1 || true
+RUN /usr/bin/ssh-keygen -A
+
+COPY ./scripts/entrypoint_ssh.sh /agent/entrypoint.sh
+
+# cleanup
+RUN apt autoremove -y \
+    && apt clean \
+    && rm -r /var/lib/apt/lists
+
+# Set the working directory to /core
+WORKDIR /agent
+
+ENTRYPOINT ["/agent/entrypoint.sh"]

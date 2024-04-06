@@ -1,0 +1,10 @@
+version: '2.2'
+services:
+    core_agent:
+        container_name: core_agent
+        image: phau/coreagent:${IMAGE_TAG}
+        restart: unless-stopped
+        privileged: true
+        ports:
+            # GDB SSH
+            - "5454:5454"

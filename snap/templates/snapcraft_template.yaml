@@ -1,0 +1,27 @@
+name: phantom-agent
+base: core20 # the base snap is the execution environment for this snap
+version: "${app_version}"
+website: https://phantom.auto/
+summary: This snap will install Phantom Auto Agent # 79 char long summary
+description: |
+  Phantom Agent is a service providing diagnostistc, and OTA on the node
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: classic # use 'strict' once you have the right plugs and slots
+
+parts:
+  phantom-agent:
+    source: rootfs
+    source-type: local
+    plugin: dump
+    stage:
+      - phantom_agent
+    stage-packages:
+      - curl
+
+apps:
+  phantom-agent-daemon:
+    environment:
+      SNAP_USER_COMMON: $SNAP_USER_COMMON
+    command: phantom_agent
+    daemon: simple

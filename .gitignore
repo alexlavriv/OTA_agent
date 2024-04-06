@@ -1,0 +1,9 @@
+/target
+.idea
+.vscode
+*.snap
+*.deb
+*.msi
+/log
+*.lock
+__pycache__
